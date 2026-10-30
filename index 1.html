@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fluxograma AS-IS · Atualização do Unisoma</title>
+<style>
+:root{
+  --brand-red:#E30613;
+  --brand-dark-red:#B3000F;
+  --brand-wine:#6E0010;
+  --page:#F7F7F8;
+  --surface:#FFFFFF;
+  --surface-soft:#F2F2F3;
+  --text-primary:#202938;
+  --text-secondary:#5B6472;
+  --border:#E3E5E9;
+  --wire:#2F3542;
+  --wire-weak:#8A8F98;
+  --success:#16803C;
+  --success-bg:#EAF6EE;
+  --warning:#B45309;
+  --warning-bg:#FFF6E5;
+  --neutral:#6B7280;
+  --neutral-bg:#F1F2F4;
+  --validation:#FFC933;
+  --validation-ink:#4A2F00;
+  --manual:#D9480F;
+  --manual-bg:#FFF3EC;
+  --m-a:#E30613; --m-b:#D10C1B; --m-c:#BD0B19; --m-d:#A70A17; --m-e:#910915; --m-f:#7B0813; --m-g:#650711;
+  --font:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);background:var(--page);color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+.topbar{background:var(--brand-red);color:#fff;height:48px;display:flex;align-items:center;gap:10px;padding:0 28px;font-weight:700;font-size:17px}
+.topbar .logo{font-weight:800;font-size:21px;letter-spacing:-.4px}
+.topbar .sep{opacity:.7;font-weight:400}
+.page{max-width:2200px;margin:0 auto;padding:20px 24px 32px}
+
+.hero{background:linear-gradient(100deg,var(--brand-red) 0%,var(--brand-dark-red) 55%,var(--brand-wine) 100%);color:#fff;border-radius:12px;padding:22px 28px;display:flex;flex-wrap:wrap;gap:20px 28px;justify-content:space-between;align-items:center}
+.eyebrow{font-size:11px;letter-spacing:.2em;font-weight:700;text-transform:uppercase;opacity:.92}
+.hero h1{margin:6px 0 4px;font-size:30px;line-height:1.12;font-weight:800}
+.hero p{margin:0 0 12px;font-size:14px;max-width:660px;line-height:1.45}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pills span{border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.14);border-radius:999px;padding:3px 11px;font-size:10.5px;font-weight:700;letter-spacing:.08em}
+.hero-card{background:#fff;color:var(--text-primary);border-radius:10px;padding:14px 18px;min-width:270px;font-size:12.5px}
+.hero-card dl{margin:0}
+.hero-card dt{color:var(--brand-red);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin-top:9px}
+.hero-card dt:first-child{margin-top:0}
+.hero-card dd{margin:2px 0 0;font-weight:700}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--brand-red);border-radius:8px;padding:12px 16px}
+.kpi .l{font-size:10.5px;font-weight:700;letter-spacing:.09em;color:var(--text-secondary);text-transform:uppercase}
+.kpi .v{font-size:28px;font-weight:800;margin:2px 0;color:var(--text-primary)}
+.kpi .v.red{color:var(--brand-red)}
+.kpi .d{font-size:11.5px;color:var(--text-secondary);line-height:1.35}
+
+.toolbar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
+.tb-group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tb-title{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--text-secondary);margin-right:2px}
+.btn{background:var(--surface);border:1px solid #CBD0D8;border-radius:6px;padding:6px 12px;font-size:12.5px;font-weight:700;color:var(--text-primary);cursor:pointer;line-height:1.2}
+.btn:hover{border-color:var(--brand-red);color:var(--brand-red)}
+.btn:focus-visible,.macro:focus-visible,.node:focus-visible,.pv:focus-visible,.chip:focus-visible{outline:3px solid var(--brand-red);outline-offset:2px}
+.btn.icon{width:34px;padding:6px 0;font-size:16px}
+.btn[aria-pressed="true"]{background:var(--brand-red);border-color:var(--brand-red);color:#fff}
+.btn[aria-pressed="true"]::before{content:"\2713\00a0"}
+.zoom-label{min-width:48px;text-align:center;font-weight:800;font-size:12.5px}
+.chip{border:1px solid #CBD0D8;background:var(--surface);color:var(--text-primary);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--brand-wine);border-color:var(--brand-wine);color:#fff}
+.chip:hover{border-color:var(--brand-red)}
+.selinfo{font-size:12.5px;color:var(--text-secondary);margin:10px 2px 0;min-height:18px}
+.selinfo b{color:var(--text-primary)}
+
+.canvas-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-top:8px;box-shadow:0 1px 2px rgba(32,41,56,.05);overflow:hidden}
+.viewport{overflow-x:auto;overflow-y:hidden;width:100%}
+.sizer{position:relative}
+.canvas{position:absolute;left:0;top:0;width:2470px;height:1354px;transform-origin:0 0;background:#fff;font-size:12px}
+
+.lane{position:absolute;left:0;width:100%;border-top:1px solid var(--border);background:#fff}
+.lane.alt{background:#FAFAFB}
+.lane-label{position:absolute;left:0;top:0;bottom:0;width:110px;background:#2E2F36;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font-weight:700;font-size:13px;line-height:1.3;border-right:3px solid var(--brand-red)}
+.col-guide{position:absolute;top:60px;bottom:0;border-left:1px dotted #D3D6DC;z-index:0}
+.macro{position:absolute;top:8px;height:44px;border-radius:8px;color:#fff;border:0;display:flex;align-items:center;gap:8px;padding:0 10px;font-size:12px;font-weight:700;line-height:1.15;text-align:left;cursor:pointer;background:var(--c);z-index:3;transition:opacity .15s}
+.macro .mn{min-width:0;overflow-wrap:anywhere}
+.macro .ml{flex:none;width:24px;height:24px;border-radius:50%;background:#fff;color:var(--c);display:grid;place-items:center;font-weight:800;font-size:13px}
+.macro.is-dim{opacity:.3}
+.macro.is-filter{box-shadow:0 0 0 3px rgba(227,6,19,.35)}
+
+.node{position:absolute;z-index:3;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 3px rgba(32,41,56,.09);transition:opacity .15s,box-shadow .15s}
+.node.is-dim{opacity:.18}
+.node.is-selected{outline:3px solid var(--brand-red);outline-offset:3px}
+.node[data-id]{cursor:pointer}
+
+.source{width:106px;height:116px;padding:8px 8px;border-top:3px solid var(--m-a);text-align:center}
+.src-name{font-weight:800;font-size:13px;color:var(--m-a)}
+.src-count{font-size:10.5px;font-weight:700;color:var(--text-secondary);margin-top:2px}
+.src-feeds{font-size:10.5px;color:var(--text-primary);margin-top:5px;line-height:1.3;word-break:break-word}
+.src-feeds i{display:block;font-style:normal;color:var(--text-secondary);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase}
+
+.decision{width:240px;height:112px;border:0;background:none;box-shadow:none;display:grid;place-items:center}
+.decision svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.decision polygon{fill:var(--warning-bg);stroke:var(--warning);stroke-width:2.5}
+.decision .dt{position:relative;text-align:center;font-weight:800;font-size:13px;line-height:1.2;padding:0 48px}
+.decision .dt small{display:block;font-weight:700;font-size:9.5px;letter-spacing:.08em;color:var(--warning);text-transform:uppercase;margin-bottom:2px}
+.decision.is-selected{outline:none}
+.decision.is-selected polygon{stroke:var(--brand-red);stroke-width:4}
+
+.groups{position:absolute;display:flex;gap:12px;z-index:3;align-items:stretch}
+.group{position:relative;flex:1 1 0;width:290px;border:2px solid var(--gc);background:var(--gbg);border-radius:10px;padding:10px 12px 8px;box-shadow:none;left:auto;top:auto}
+.group.regular{--gc:var(--success);--gbg:var(--success-bg)}
+.group.qn{--gc:var(--warning);--gbg:var(--warning-bg)}
+.group.none{--gc:var(--neutral);--gbg:var(--neutral-bg);border-style:solid}
+.g-head{display:flex;align-items:center;gap:8px}
+.g-ico{flex:none;width:22px;height:22px;border-radius:50%;background:var(--gc);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
+.g-title{font-weight:800;font-size:13.5px;color:var(--gc);line-height:1.15}
+.g-count{margin-left:auto;background:var(--gc);color:#fff;border-radius:999px;padding:1px 9px;font-size:11px;font-weight:800}
+.g-sub{font-size:10.5px;color:var(--text-secondary);margin:3px 0 6px}
+.rows{display:block}
+.row{display:grid;grid-template-columns:30px 1fr auto;gap:6px;align-items:start;padding:3px 0;border-top:1px dashed rgba(32,41,56,.16);font-size:11.5px;line-height:1.25}
+.row .id{font-weight:800;color:var(--gc)}
+.row .sc{font-size:10px;font-weight:600;color:#394150;background:rgba(255,255,255,.85);border:1px solid rgba(32,41,56,.16);border-radius:4px;padding:0 4px;white-space:nowrap}
+.row.hl{background:#FFF1A8;outline:2px solid #E0A800;border-radius:3px}
+
+.act{width:160px;padding:11px 10px 9px;border:1px solid var(--border);border-left:4px solid var(--c)}
+.act.manual{border:2px dashed var(--manual);border-left:2px dashed var(--manual);background:#fff}
+.act-head{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.act .num{background:var(--c);color:#fff;border-radius:999px;padding:1px 10px;font-weight:800;font-size:12.5px}
+.act .mt{font-size:10px;font-weight:700;color:var(--c);border:1px solid var(--c);border-radius:4px;padding:0 5px;margin-left:auto}
+.act-title{font-weight:700;font-size:12.5px;line-height:1.28}
+.act-meta{margin-top:7px;padding-top:6px;border-top:1px solid var(--border);font-size:10.5px;color:var(--text-secondary);line-height:1.4}
+.badge-manual{position:absolute;top:-10px;right:10px;background:var(--manual);color:#fff;font-size:9px;font-weight:800;letter-spacing:.07em;padding:2px 7px;border-radius:4px;z-index:2}
+
+.band{position:absolute;z-index:1;background:var(--manual-bg);border:1px dashed var(--manual);border-radius:8px;display:flex;align-items:center;padding:0 16px;font-size:12.5px;font-weight:700;color:#8A2F05}
+.band span{opacity:.85;font-weight:600;margin-left:8px}
+
+.summary{width:516px;padding:12px 14px 12px;border-top:3px solid var(--brand-red);cursor:default}
+.sm-eyebrow{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-red)}
+.sm-title{font-size:15px;font-weight:800;margin:2px 0 10px}
+.sm-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sm-kpi{background:var(--surface-soft);border-radius:6px;padding:7px 8px;border-left:4px solid var(--k)}
+.sm-kpi .l{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);line-height:1.2}
+.sm-kpi .v{font-size:22px;font-weight:800;color:var(--k)}
+.sm-h{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--brand-red);margin:11px 0 5px}
+.sm-chips{display:flex;flex-wrap:wrap;gap:5px}
+.sm-chip{background:var(--surface-soft);border:1px solid var(--border);border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700}
+.sm-chip b{color:var(--brand-red)}
+.sm-pv{list-style:none;margin:0;padding:0}
+.sm-pv li{display:flex;gap:8px;align-items:center;font-size:11.5px;padding:2px 0;cursor:pointer}
+.sm-pv .pvm{flex:none;min-width:34px;text-align:center;background:var(--validation);color:var(--validation-ink);border:1.5px solid #A16900;border-radius:999px;font-size:9.5px;font-weight:800;padding:1px 0}
+
+svg.wires{position:absolute;left:0;top:0;z-index:2;pointer-events:none;overflow:visible}
+.wire{fill:none;stroke:var(--wire);stroke-width:2;stroke-linejoin:round;transition:opacity .15s}
+.wire.dashed{stroke:var(--wire-weak);stroke-dasharray:7 5}
+.wire.is-active{stroke:var(--brand-red);stroke-width:3.2}
+.wire.is-dim{opacity:.1}
+.wl{position:absolute;z-index:4;transform:translate(-50%,-50%);font-size:10px;font-weight:800;letter-spacing:.05em;color:#fff;border-radius:4px;padding:2px 7px;white-space:nowrap;background:var(--gc);transition:opacity .15s}
+.wl.regular{--gc:var(--success)} .wl.qn{--gc:var(--warning)} .wl.none{--gc:var(--neutral)}
+.wl.is-dim{opacity:.15}
+
+.pv{position:absolute;z-index:6;transform:translate(-50%,-50%);width:32px;height:32px;padding:0;border-radius:50%;background:var(--validation);color:var(--validation-ink);border:2px solid #A16900;font-size:10px;font-weight:800;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:opacity .15s,transform .15s}
+.pv.is-dim{opacity:.2}
+.canvas.hl-pv .pv{transform:translate(-50%,-50%) scale(1.3);box-shadow:0 0 0 5px rgba(255,201,51,.45)}
+.canvas.hl-pv .node.has-pv:not(.decision){outline:3px dashed #E0A800;outline-offset:3px}
+.canvas.hl-manual .node:not(.manual):not(.decision){opacity:.35}
+.canvas.hl-manual .node.manual{box-shadow:0 0 0 5px rgba(217,72,15,.28)}
+.canvas.no-det .det{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .canvas.hl-pv .pv{animation:pvpulse 1.6s ease-in-out infinite}
+  @keyframes pvpulse{0%,100%{box-shadow:0 0 0 3px rgba(255,201,51,.5)}50%{box-shadow:0 0 0 9px rgba(255,201,51,.15)}}
+}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin-top:12px;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:11.5px;color:var(--text-secondary)}
+.legend .li{display:flex;align-items:center;gap:7px}
+.sw{display:inline-block;width:26px;height:16px;border-radius:3px;border:1.5px solid var(--border);background:#fff}
+.sw.manual{border:2px dashed var(--manual)}
+.sw.green{background:var(--success-bg);border-color:var(--success)}
+.sw.amber{background:var(--warning-bg);border-color:var(--warning)}
+.sw.gray{background:var(--neutral-bg);border-color:var(--neutral)}
+.sw.act{border-color:var(--wire-weak)}
+.lg-pv{width:22px;height:22px;border-radius:50%;background:var(--validation);color:var(--validation-ink);border:1.5px solid #A16900;font-size:8.5px;font-weight:800;display:grid;place-items:center}
+.src-note{margin-top:8px;font-size:11px;color:var(--text-secondary)}
+
+.tip{position:fixed;z-index:1000;max-width:330px;background:#202938;color:#fff;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.42;box-shadow:0 6px 22px rgba(0,0,0,.28);pointer-events:none}
+.tip .tt{font-weight:800;font-size:12.5px;margin-bottom:4px}
+.tip .tt.pv{color:var(--validation)}
+.tip p{margin:3px 0}
+.tip .sub{color:#C9CED8;font-size:11px}
+.tip dl{margin:4px 0 0;display:grid;grid-template-columns:auto 1fr;gap:1px 10px}
+.tip dt{color:#C9CED8}
+.tip dd{margin:0;font-weight:700}
+.tip .warn{color:var(--validation);font-size:11px;margin-top:5px}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="logo">claro</span><span class="sep">|</span><span>PROCESSOS — Fluxograma AS-IS</span></div>
+
+<main class="page">
+  <section class="hero" aria-label="Cabeçalho">
+    <div>
+      <div class="eyebrow">Logística — Processo Unisoma</div>
+      <h1>Fluxograma AS-IS · Atualização do Unisoma</h1>
+      <p>Da preparação das bases de entrada até a atualização do BI, passando pelo Agilis – Unisoma, otimizador, análise de autonomia e simulação em Excel.</p>
+      <div class="pills"><span>PREPARAÇÃO</span><span>AGILIS – UNISOMA</span><span>OTIMIZADOR</span><span>AUTONOMIA</span><span>BI</span></div>
+    </div>
+    <div class="hero-card">
+      <dl>
+        <dt>Fonte do conteúdo</dt><dd>Fluxo_Unisoma.xlsx</dd>
+        <dt>Ambientes</dt><dd>Sheet · Site · BI</dd>
+        <dt>Responsável (etapas 2 a 6.1)</dt><dd>Analista</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="kpis" id="kpis" aria-label="Indicadores do mapeamento"></section>
+
+  <section class="toolbar" aria-label="Controles do fluxograma">
+    <div class="tb-group" role="group" aria-label="Zoom">
+      <span class="tb-title">Zoom</span>
+      <button class="btn icon" id="zOut" type="button" aria-label="Diminuir zoom" title="Zoom −">−</button>
+      <span class="zoom-label" id="zLabel" aria-live="polite">100%</span>
+      <button class="btn icon" id="zIn" type="button" aria-label="Aumentar zoom" title="Zoom +">+</button>
+      <button class="btn" id="zFit" type="button">Ajustar à tela</button>
+      <button class="btn" id="zReset" type="button">Restaurar zoom</button>
+    </div>
+    <div class="tb-group" role="group" aria-label="Exibição">
+      <span class="tb-title">Exibição</span>
+      <button class="btn" id="tDetails" type="button" aria-pressed="true">Exibir detalhes</button>
+      <button class="btn" id="tManual" type="button" aria-pressed="false">Destacar manuais</button>
+      <button class="btn" id="tPv" type="button" aria-pressed="false">Destacar PVs</button>
+    </div>
+    <div class="tb-group" role="group" aria-label="Filtro por macroetapa" id="filters">
+      <span class="tb-title">Macroetapa</span>
+    </div>
+  </section>
+  <div class="selinfo" id="selInfo" aria-live="polite"></div>
+
+  <section class="canvas-card" aria-label="Fluxograma AS-IS">
+    <div class="viewport" id="viewport">
+      <div class="sizer" id="sizer"><div class="canvas" id="canvas"><svg class="wires" id="wires" aria-hidden="true"></svg></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="legend" aria-label="Legenda">
+      <span class="li"><span class="sw act"></span>Retângulo = atividade</span>
+      <span class="li"><svg width="26" height="18" viewBox="0 0 26 18" aria-hidden="true"><polygon points="13,1 25,9 13,17 1,9" fill="#FFF6E5" stroke="#B45309" stroke-width="1.8"/></svg>Losango = decisão</span>
+      <span class="li"><span class="sw manual"></span>Borda tracejada = atividade manual</span>
+      <span class="li"><svg width="34" height="12" viewBox="0 0 34 12" aria-hidden="true"><line x1="1" y1="6" x2="26" y2="6" stroke="#2F3542" stroke-width="2"/><polygon points="25,1 33,6 25,11" fill="#2F3542"/></svg>Seta contínua = sequência</span>
+      <span class="li"><svg width="34" height="12" viewBox="0 0 34 12" aria-hidden="true"><line x1="1" y1="6" x2="26" y2="6" stroke="#8A8F98" stroke-width="2" stroke-dasharray="5 3"/><polygon points="25,1 33,6 25,11" fill="#8A8F98"/></svg>Seta tracejada = dependência a validar</span>
+      <span class="li"><span class="lg-pv">PV</span>Ponto a validar</span>
+      <span class="li"><span class="sw green"></span>✔ Verde = atualização regular</span>
+      <span class="li"><span class="sw amber"></span>◐ Âmbar = quando necessário</span>
+      <span class="li"><span class="sw gray"></span>⊘ Cinza = sem atualização</span>
+    </div>
+    <div class="src-note">Conteúdo do processo extraído exclusivamente de Fluxo_Unisoma.xlsx. A identidade visual segue a referência executiva do Dashboard_Acoes (somente paleta, cabeçalhos, cards e tipografia).</div>
+  </footer>
+</main>
+
+<div id="tip" class="tip" role="tooltip" hidden></div>
+
+<script>
+(function () {
+'use strict';
+
+/* =====================================================================
+   1. DADOS DO PROCESSO (fonte: Fluxo_Unisoma.xlsx)
+   ===================================================================== */
+const processData = {
+  meta: { title: 'Fluxograma AS-IS · Atualização do Unisoma', source: 'Fluxo_Unisoma.xlsx' },
+
+  macroStages: [
+    { id: 'A', name: 'Preparação das bases de entrada',          x: 124,  w: 894, color: 'var(--m-a)' },
+    { id: 'B', name: 'Input no Agilis – Unisoma',                x: 1038, w: 160, color: 'var(--m-b)' },
+    { id: 'C', name: 'Configuração e execução do otimizador',    x: 1218, w: 336, color: 'var(--m-c)' },
+    { id: 'D', name: 'Exportação dos resultados',                x: 1574, w: 160, color: 'var(--m-d)' },
+    { id: 'E', name: 'Análise de autonomia',                     x: 1754, w: 160, color: 'var(--m-e)' },
+    { id: 'F', name: 'Simulação e consolidação em Excel',        x: 1934, w: 336, color: 'var(--m-f)' },
+    { id: 'G', name: 'Atualização/publicação no BI',             x: 2290, w: 160, color: 'var(--m-g)' }
+  ],
+
+  lanes: [
+    { id: 'src',     label: 'Fontes / Sistemas de origem', y: 64,   h: 170 },
+    { id: 'excel',   label: 'Excel / Bases',               y: 234,  h: 570 },
+    { id: 'analyst', label: 'Analista',                    y: 804,  h: 190 },
+    { id: 'agilis',  label: 'Agilis / Unisoma (Site)',     y: 994,  h: 190 },
+    { id: 'bi',      label: 'BI',                          y: 1184, h: 170 }
+  ],
+
+  sources: [
+    { id: 'SAP', name: 'SAP' }, { id: 'ETMS', name: 'ETMS' }, { id: 'IBP', name: 'IBP' },
+    { id: 'IN', name: 'IN' }, { id: 'ZIBP', name: 'ZIBP' }, { id: 'Comercial', name: 'Comercial' },
+    { id: 'Analytics', name: 'Analytics' }, { id: 'Planejamento', name: 'Planejamento' }
+  ],
+
+  updateClasses: {
+    regular: { key: 'regular', icon: '✔', title: 'Atualização regular',            sub: 'Coluna “Atualização” = Sim',                 raw: 'Sim' },
+    qn:      { key: 'qn',      icon: '◐', title: 'Atualização quando necessário',  sub: 'Coluna “Atualização” = Quando necessário',   raw: 'Quando necessário' },
+    none:    { key: 'none',    icon: '⊘', title: 'Sem necessidade de atualização', sub: 'Coluna “Atualização” = Não',                 raw: 'Não' }
+  },
+
+  /* 23 bases (itens 1.1 a 1.23) – ambiente Sheet */
+  bases: [
+    { id: '1.1',  name: 'Cadastro de CD',                                      cls: 'none',    freq: 0,  sources: ['ZIBP'] },
+    { id: '1.2',  name: 'Cadastro de Depósito',                                cls: 'none',    freq: 0,  sources: ['ZIBP'] },
+    { id: '1.3',  name: 'Cadastro de SKU',                                     cls: 'qn',      freq: 1,  sources: ['ZIBP'] },
+    { id: '1.4',  name: 'Calendário Comercial',                                cls: 'qn',      freq: 1,  sources: ['Comercial'] },
+    { id: '1.5',  name: 'CD X UF',                                             cls: 'none',    freq: 0,  sources: ['Planejamento'] },
+    { id: '1.6',  name: 'Pedidos agendados',                                   cls: 'regular', freq: 20, sources: ['SAP'] },
+    { id: '1.7',  name: 'Transf. CD',                                          cls: 'regular', freq: 20, sources: ['SAP', 'ETMS'] },
+    { id: '1.8',  name: 'Consumo mensal Misc',                                 cls: 'regular', freq: 20, sources: ['IBP'] },
+    { id: '1.9',  name: 'Consumo mensal Terminais',                            cls: 'regular', freq: 20, sources: ['IBP'] },
+    { id: '1.10', name: 'Estoque Campo',                                       cls: 'regular', freq: 20, sources: ['IN'] },
+    { id: '1.11', name: 'Estoque Inicial CD',                                  cls: 'regular', freq: 20, sources: ['IBP'] },
+    { id: '1.12', name: 'Excesso cobertura Estoque',                           cls: 'none',    freq: 0,  sources: ['Planejamento'] },
+    { id: '1.13', name: 'Ficha de compatibilidade Terminal x acessórios',      cls: 'qn',      freq: 1,  sources: ['Planejamento'] },
+    { id: '1.14', name: 'Lead Time entre CD - Transf.',                        cls: 'qn',      freq: 1,  sources: ['Analytics'], note: 'No arquivo a fonte está grafada “Analitycs”.' },
+    { id: '1.15', name: 'Previsão Demanda CD - Forecast consumo terminais',    cls: 'regular', freq: 1,  sources: ['IBP'] },
+    { id: '1.16', name: 'Previsão Demanda CD - Forecast consumo MISC',         cls: 'regular', freq: 1,  sources: ['Planejamento'] },
+    { id: '1.17', name: 'Previsão Reversa Terminais - Forecast',               cls: 'regular', freq: 1,  sources: ['Planejamento'] },
+    { id: '1.18', name: 'Proporção distribuição Reversa CD',                   cls: 'none',    freq: 0,  sources: ['Planejamento'] },
+    { id: '1.19', name: 'Proporção distribuição Reversa Por Terminal',         cls: 'qn',      freq: 4,  sources: ['Planejamento'] },
+    { id: '1.20', name: 'Percentual de recuperação da reversa',                cls: 'none',    freq: 0,  sources: ['Planejamento'] },
+    { id: '1.21', name: 'Previsão da reversa de acessórios',                   cls: 'qn',      freq: 1,  sources: ['Planejamento'] },
+    { id: '1.22', name: 'Consumo mensal reversa acessório',                    cls: 'regular', freq: 20, sources: ['SAP'] },
+    { id: '1.23', name: 'Consumo mensal reversa Terminais',                    cls: 'regular', freq: 20, sources: ['SAP'] }
+  ],
+
+  /* Etapas 2 a 6.1 – cy = centro vertical; manual = executada pelo Analista */
+  activities: [
+    { id: 'a2',  num: '2',   macro: 'B', name: 'Input no site Agilis – Unisoma',                                          env: 'Site',  update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 1038, cy: 1089 },
+    { id: 'a3',  num: '3',   macro: 'C', name: 'Atualiza a data de início no site Agilis – Unisoma',                      env: 'Site',  update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 1218, cy: 1089 },
+    { id: 'a31', num: '3.1', macro: 'C', name: 'Roda o otimizador',                                                       env: 'Site',  update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 1394, cy: 1089 },
+    { id: 'a4',  num: '4',   macro: 'D', name: 'Exportando do site Agilis o Excel',                                       env: 'Site',  update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 1574, cy: 1089 },
+    { id: 'a41', num: '4.1', macro: 'E', name: 'Análise da autonomia da Unisoma',                                         env: 'Sheet', update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 1754, cy: 380 },
+    { id: 'a5',  num: '5',   macro: 'F', name: 'Dados do Unisoma transferidos para o Excel da autonomia (BI / Planilha)', env: 'Sheet', update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 1934, cy: 380 },
+    { id: 'a51', num: '5.1', macro: 'F', name: 'Simulação na base Excel da nossa autonomia',                              env: 'Sheet', update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 2110, cy: 380 },
+    { id: 'a6',  num: '6',   macro: 'G', name: 'Arquivo Excel enviado para o Erick / Guilherme para atualizar no BI',     env: 'BI',    update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 2290, cy: 899,
+      note: 'Posicionada na raia do Analista, que envia o arquivo; o ambiente registrado no arquivo é BI.' },
+    { id: 'a61', num: '6.1', macro: 'G', name: 'Atualizar o BI',                                                          env: 'BI',    update: 'Sim', freq: 20, source: 'Analista', owner: 'Analista', manual: true, x: 2290, cy: 1269 }
+  ],
+
+  decisions: [
+    { id: 'dec', macro: 'A', name: 'Necessita atualização?', x: 451, y: 252, w: 240, h: 112 }
+  ],
+
+  validations: [
+    { id: 'PV1', where: 'Bases 1.x → Input no Agilis (2)', short: 'Responsável e dependência das bases 1.x → Input (2)',
+      text: 'O arquivo não informa o responsável pela atualização das bases 1.x nem a ordem/dependência entre elas e o Input no Agilis – Unisoma (2).',
+      at: { conn: 'c-qn-a2', t: 0.62 } },
+    { id: 'PV2', where: 'Bases sem atualização → Input (2)', short: 'Uso das bases “Não” no Input (2)',
+      text: 'Não está explícito se as bases sem necessidade de atualização (“Não”) seguem como entrada do Input (2). A relação foi mantida como dependência a validar.',
+      at: { conn: 'c-none-a2', t: 0.85 } },
+    { id: 'PV3', where: 'Etapa 4.1 → Etapa 5', short: 'Ordem entre 4.1 (análise) e 5 (transferência)',
+      text: 'A análise da autonomia (4.1) aparece antes da transferência dos dados ao Excel da autonomia (5). Confirmar a ordem entre as duas atividades.',
+      at: { node: 'a41', corner: 'tr', dx: 6, dy: -6 } },
+    { id: 'PV4', where: 'Etapa 5', short: 'Destino do item 5 (“BI / Planilha”)',
+      text: 'O item 5 está descrito como “BI / Planilha”. Confirmar o destino exato dos dados.',
+      at: { node: 'a5', corner: 'tr', dx: 6, dy: -6 } },
+    { id: 'PV5', where: 'Etapas 6 → 6.1', short: 'Executor das etapas 6 e 6.1',
+      text: 'O item 6 cita Erick/Guilherme para atualizar o BI, enquanto o item 6.1 indica Analista como responsável. Confirmar quem executa a atualização.',
+      at: { conn: 'c-a6-a61', t: 0.5 } },
+    { id: 'PV6', where: 'Coluna “Período por mês”', short: 'Significado de “Período por mês” (20, 4, 1, 0)',
+      text: 'O significado do número da coluna “Período por mês” (20, 4, 1, 0) e o critério de “Quando necessário” não estão definidos no arquivo.',
+      at: { node: 'g-qn', corner: 'tr', dx: 6, dy: -6 } }
+  ],
+
+  /* side: l/r/t/b ; off = deslocamento no lado de destino ; dashed = dependência a validar */
+  connections: [
+    { id: 'c-src-SAP',          from: 'src-SAP',          to: 'dec', fs: 'b', ts: 't', noArrow: true },
+    { id: 'c-src-ETMS',         from: 'src-ETMS',         to: 'dec', fs: 'b', ts: 't', noArrow: true },
+    { id: 'c-src-IBP',          from: 'src-IBP',          to: 'dec', fs: 'b', ts: 't', noArrow: true },
+    { id: 'c-src-IN',           from: 'src-IN',           to: 'dec', fs: 'b', ts: 't', noArrow: true },
+    { id: 'c-src-ZIBP',         from: 'src-ZIBP',         to: 'dec', fs: 'b', ts: 't', noArrow: true },
+    { id: 'c-src-Comercial',    from: 'src-Comercial',    to: 'dec', fs: 'b', ts: 't', noArrow: true },
+    { id: 'c-src-Analytics',    from: 'src-Analytics',    to: 'dec', fs: 'b', ts: 't', noArrow: true },
+    { id: 'c-src-Planejamento', from: 'src-Planejamento', to: 'dec', fs: 'b', ts: 't' },
+    { id: 'c-dec-reg',  from: 'dec', to: 'g-regular', fs: 'l', ts: 't', label: { text: '✔ SIM / REGULAR',        cls: 'regular', t: 0.3,  dy: -13 } },
+    { id: 'c-dec-qn',   from: 'dec', to: 'g-qn',      fs: 'b', ts: 't', label: { text: '◐ QUANDO NECESSÁRIO',    cls: 'qn',      t: 0.5,  dx: -84 } },
+    { id: 'c-dec-none', from: 'dec', to: 'g-none',    fs: 'r', ts: 't', label: { text: '⊘ NÃO',                  cls: 'none',    t: 0.3,  dy: -13 } },
+    { id: 'c-reg-a2',   from: 'g-regular', to: 'a2', fs: 'b', ts: 'l', off: 26 },
+    { id: 'c-qn-a2',    from: 'g-qn',      to: 'a2', fs: 'b', ts: 'l', off: 0 },
+    { id: 'c-none-a2',  from: 'g-none',    to: 'a2', fs: 'b', ts: 'l', off: -26, dashed: true },
+    { id: 'c-a2-a3',    from: 'a2',  to: 'a3',  fs: 'r', ts: 'l' },
+    { id: 'c-a3-a31',   from: 'a3',  to: 'a31', fs: 'r', ts: 'l' },
+    { id: 'c-a31-a4',   from: 'a31', to: 'a4',  fs: 'r', ts: 'l' },
+    { id: 'c-a4-a41',   from: 'a4',  to: 'a41', fs: 't', ts: 'l' },
+    { id: 'c-a41-a5',   from: 'a41', to: 'a5',  fs: 'r', ts: 'l' },
+    { id: 'c-a5-a51',   from: 'a5',  to: 'a51', fs: 'r', ts: 'l' },
+    { id: 'c-a51-a6',   from: 'a51', to: 'a6',  fs: 'r', ts: 't' },
+    { id: 'c-a6-a61',   from: 'a6',  to: 'a61', fs: 'b', ts: 't' }
+  ]
+};
+
+/* =====================================================================
+   2. ESTADO E UTILIDADES
+   ===================================================================== */
+const W = 2470, H = 1354, LABEL_W = 110;
+const state = { scale: 1, autoFit: true, filter: 'ALL', selected: null, pinned: null };
+const $ = (id) => document.getElementById(id);
+const canvas = $('canvas'), wires = $('wires'), viewport = $('viewport'), sizer = $('sizer'), tip = $('tip');
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+function h(tag, cls, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+function sv(tag, attrs) {
+  const e = document.createElementNS(SVGNS, tag);
+  Object.keys(attrs || {}).forEach(k => e.setAttribute(k, attrs[k]));
+  return e;
+}
+const macroMap = {}; processData.macroStages.forEach(m => macroMap[m.id] = m);
+const actMap = {};   processData.activities.forEach(a => actMap[a.id] = a);
+const pvMap = {};    processData.validations.forEach(v => pvMap[v.id] = v);
+const baseMap = {};  processData.bases.forEach(b => baseMap[b.id] = b);
+const registry = {}; // id -> { id, el, kind, macro, label, noSel }
+const wireEls = {};  // id -> { conn, path }
+const pvEls = [], labelEls = [];
+
+function freqText(f) { return f + '/mês'; }
+function srcText(b) { return b.sources.join(' / '); }
+
+/* =====================================================================
+   3. RENDERIZAÇÃO
+   ===================================================================== */
+function renderKpis() {
+  const d = processData, n = d.bases.length;
+  const cnt = (k) => d.bases.filter(b => b.cls === k).length;
+  const items = [
+    { l: 'Bases de entrada', v: n, d: cnt('regular') + ' regulares · ' + cnt('qn') + ' quando necessário · ' + cnt('none') + ' sem atualização' },
+    { l: 'Etapas do processo', v: d.activities.length, d: 'Etapas 2 a 6.1 em ' + d.macroStages.length + ' macroetapas (A a G)' },
+    { l: 'Fontes de dados', v: d.sources.length, d: d.sources.map(s => s.name).join(' · ') },
+    { l: 'Pontos a validar', v: d.validations.length, d: 'Itens que dependem de confirmação do responsável', red: true }
+  ];
+  $('kpis').innerHTML = items.map(i => '<div class="kpi"><div class="l">' + i.l + '</div><div class="v' + (i.red ? ' red' : '') + '">' + i.v + '</div><div class="d">' + i.d + '</div></div>').join('');
+}
+
+function renderFilters() {
+  const box = $('filters');
+  const mk = (id, label) => {
+    const b = h('button', 'chip', label); b.type = 'button'; b.dataset.f = id; b.setAttribute('aria-pressed', id === 'ALL' ? 'true' : 'false');
+    b.addEventListener('click', () => setFilter(id)); box.appendChild(b);
+  };
+  mk('ALL', 'Todas');
+  processData.macroStages.forEach(m => mk(m.id, m.id));
+}
+
+function renderStructure() {
+  const d = processData;
+  d.lanes.forEach((ln, i) => {
+    const row = h('div', 'lane' + (i % 2 ? ' alt' : ''));
+    row.style.top = ln.y + 'px'; row.style.height = ln.h + 'px';
+    row.innerHTML = '<div class="lane-label">' + ln.label + '</div>';
+    canvas.appendChild(row);
+  });
+  d.macroStages.forEach((m, i) => {
+    if (i > 0) { const g = h('div', 'col-guide'); g.style.left = (m.x - 10) + 'px'; canvas.appendChild(g); }
+    const b = h('button', 'macro', '<span class="ml">' + m.id + '</span><span class="mn">' + m.name.replace('/', '/\u200B') + '</span>');
+    b.type = 'button'; b.dataset.f = m.id; b.style.cssText = 'left:' + m.x + 'px;width:' + m.w + 'px;--c:' + m.color;
+    b.setAttribute('aria-label', 'Filtrar macroetapa ' + m.id + ': ' + m.name);
+    canvas.appendChild(b); registry['macro-' + m.id] = { id: 'macro-' + m.id, el: b, kind: 'macro', macro: m.id, noSel: true };
+  });
+  // faixa de responsabilidade do Analista
+  const band = h('div', 'band', 'Analista<span>responsável pelas etapas 2 → 6.1 (coluna “Fonte”)</span>');
+  band.style.cssText = 'left:1038px;top:874px;width:1232px;height:50px';
+  canvas.appendChild(band);
+}
+
+function renderSources() {
+  const A = macroMap.A, w = 106, gap = (A.w - 8 * w) / 7;
+  processData.sources.forEach((sc, i) => {
+    const feeds = processData.bases.filter(b => b.sources.indexOf(sc.name) >= 0).map(b => b.id);
+    const n = h('div', 'node source');
+    n.dataset.id = 'src-' + sc.id; n.dataset.tipKind = 'source'; n.dataset.tipId = sc.id;
+    n.tabIndex = 0; n.setAttribute('role', 'button'); n.setAttribute('aria-label', 'Fonte ' + sc.name + ', alimenta ' + feeds.length + ' bases');
+    n.style.left = (A.x + i * (w + gap)) + 'px'; n.style.top = '80px';
+    n.innerHTML = '<div class="src-name">' + sc.name + '</div><div class="src-count">' + feeds.length + (feeds.length === 1 ? ' base' : ' bases') + '</div>' +
+      '<div class="det src-feeds"><i>alimenta</i>' + feeds.join(', ') + '</div>';
+    canvas.appendChild(n);
+    registry['src-' + sc.id] = { id: 'src-' + sc.id, el: n, kind: 'source', macro: 'A', label: 'Fonte ' + sc.name, feeds: feeds };
+  });
+}
+
+function renderDecision() {
+  processData.decisions.forEach(dc => {
+    const n = h('div', 'node decision');
+    n.dataset.id = dc.id; n.dataset.tipKind = 'dec'; n.dataset.tipId = dc.id; n.tabIndex = 0; n.setAttribute('role', 'button');
+    n.setAttribute('aria-label', 'Decisão: ' + dc.name);
+    n.style.cssText = 'left:' + dc.x + 'px;top:' + dc.y + 'px;width:' + dc.w + 'px;height:' + dc.h + 'px';
+    n.innerHTML = '<svg viewBox="0 0 ' + dc.w + ' ' + dc.h + '" preserveAspectRatio="none" aria-hidden="true"><polygon points="' + (dc.w / 2) + ',2 ' + (dc.w - 2) + ',' + (dc.h / 2) + ' ' + (dc.w / 2) + ',' + (dc.h - 2) + ' 2,' + (dc.h / 2) + '"/></svg>' +
+      '<div class="dt"><small>Decisão</small>' + dc.name + '</div>';
+    canvas.appendChild(n);
+    registry[dc.id] = { id: dc.id, el: n, kind: 'dec', macro: dc.macro, label: 'Decisão “' + dc.name + '”' };
+  });
+}
+
+function renderGroups() {
+  const A = macroMap.A, box = h('div', 'groups'); box.id = 'groupsRow';
+  box.style.cssText = 'left:' + A.x + 'px;top:400px;width:' + A.w + 'px';
+  Object.keys(processData.updateClasses).forEach(k => {
+    const c = processData.updateClasses[k];
+    const items = processData.bases.filter(b => b.cls === k);
+    const g = h('div', 'node group ' + k);
+    g.dataset.id = 'g-' + k; g.dataset.tipKind = 'group'; g.dataset.tipId = k; g.tabIndex = 0; g.setAttribute('role', 'button');
+    g.setAttribute('aria-label', c.title + ': ' + items.length + ' bases');
+    g.innerHTML = '<div class="g-head"><span class="g-ico" aria-hidden="true">' + c.icon + '</span><span class="g-title">' + c.title + '</span><span class="g-count">' + items.length + '</span></div>' +
+      '<div class="g-sub">' + c.sub + '</div><div class="rows det">' +
+      items.map(b => '<div class="row" data-tip-kind="base" data-tip-id="' + b.id + '" data-src="' + b.sources.join('|') + '"><span class="id">' + b.id + '</span><span class="nm">' + b.name + '</span><span class="sc">' + srcText(b) + ' · ' + b.freq + '</span></div>').join('') + '</div>';
+    box.appendChild(g);
+    registry['g-' + k] = { id: 'g-' + k, el: g, kind: 'group', macro: 'A', label: c.title };
+  });
+  canvas.appendChild(box);
+}
+
+function renderActivities() {
+  processData.activities.forEach(a => {
+    const m = macroMap[a.macro];
+    const n = h('div', 'node act' + (a.manual ? ' manual' : ''));
+    n.dataset.id = a.id; n.dataset.tipKind = 'act'; n.dataset.tipId = a.id; n.tabIndex = 0; n.setAttribute('role', 'button');
+    n.setAttribute('aria-label', 'Etapa ' + a.num + ': ' + a.name + (a.manual ? ' (manual)' : ''));
+    n.style.cssText = 'left:' + a.x + 'px;width:160px;--c:' + m.color;
+    n.innerHTML = (a.manual ? '<span class="badge-manual">MANUAL</span>' : '') +
+      '<div class="act-head"><span class="num">' + a.num + '</span><span class="mt">Macro ' + a.macro + '</span></div>' +
+      '<div class="act-title">' + a.name + '</div>' +
+      '<div class="act-meta det">' + [a.env, a.update, freqText(a.freq), a.owner].join(' · ') + '</div>';
+    canvas.appendChild(n);
+    registry[a.id] = { id: a.id, el: n, kind: 'act', macro: a.macro, label: 'Etapa ' + a.num };
+  });
+}
+
+function renderSummary() {
+  const d = processData, cnt = (k) => d.bases.filter(b => b.cls === k).length;
+  const n = h('div', 'node summary info');
+  n.style.cssText = 'left:1038px;top:256px';
+  const origins = d.sources.map(s => {
+    const c = d.bases.filter(b => b.sources.indexOf(s.name) >= 0).length;
+    return '<span class="sm-chip">' + s.name + ' <b>' + c + '</b></span>';
+  }).join('');
+  const pvs = d.validations.map(v => '<li data-pvref="' + v.id + '" data-tip-kind="pv" data-tip-id="' + v.id + '" tabindex="0"><span class="pvm">' + v.id + '</span><span>' + v.short + '</span></li>').join('');
+  n.innerHTML = '<div class="sm-eyebrow">Macroetapa A</div><div class="sm-title">Resumo da preparação das bases · Macroetapa A</div>' +
+    '<div class="sm-kpis">' +
+      '<div class="sm-kpi" style="--k:var(--text-primary)"><div class="l">Total de bases</div><div class="v">' + d.bases.length + '</div></div>' +
+      '<div class="sm-kpi" style="--k:var(--success)"><div class="l">✔ Regular</div><div class="v">' + cnt('regular') + '</div></div>' +
+      '<div class="sm-kpi" style="--k:var(--warning)"><div class="l">◐ Quando necessário</div><div class="v">' + cnt('qn') + '</div></div>' +
+      '<div class="sm-kpi" style="--k:var(--neutral)"><div class="l">⊘ Sem atualização</div><div class="v">' + cnt('none') + '</div></div>' +
+    '</div>' +
+    '<div class="det"><div class="sm-h">Origens / fontes (nº de bases)</div><div class="sm-chips">' + origins + '</div>' +
+    '<div class="sm-h">Pontos a validar</div><ul class="sm-pv">' + pvs + '</ul></div>';
+  canvas.appendChild(n);
+  registry.summary = { id: 'summary', el: n, kind: 'info', macro: 'A', noSel: true };
+}
+
+function renderOverlays() {
+  processData.validations.forEach(v => {
+    const b = h('button', 'pv', v.id); b.type = 'button';
+    b.dataset.tipKind = 'pv'; b.dataset.tipId = v.id; b.setAttribute('aria-label', v.id + ': ' + v.short);
+    canvas.appendChild(b); pvEls.push({ v: v, el: b });
+    if (v.at.node && registry[v.at.node]) registry[v.at.node].el.classList.add('has-pv');
+  });
+  processData.connections.forEach(c => {
+    if (!c.label) return;
+    const l = h('div', 'wl ' + c.label.cls, c.label.text);
+    canvas.appendChild(l); labelEls.push({ c: c, el: l });
+  });
+}
+
+/* =====================================================================
+   4. LAYOUT E CONECTORES (SVG ortogonal)
+   ===================================================================== */
+function ensureDefs() {
+  if (wires.querySelector('defs')) return;
+  const defs = sv('defs');
+  [['mk-solid', '#2F3542'], ['mk-dash', '#8A8F98'], ['mk-active', '#E30613']].forEach(p => {
+    const m = sv('marker', { id: p[0], viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '11', markerHeight: '11', markerUnits: 'userSpaceOnUse', orient: 'auto' });
+    m.appendChild(sv('path', { d: 'M0,0 L10,5 L0,10 z', fill: p[1] }));
+    defs.appendChild(m);
+  });
+  wires.appendChild(defs);
+}
+
+function placeNodes() {
+  processData.activities.forEach(a => {
+    const el = registry[a.id].el;
+    el.style.top = Math.round(a.cy - el.offsetHeight / 2) + 'px';
+  });
+}
+
+function rel(el) {
+  const r = el.getBoundingClientRect(), c = canvas.getBoundingClientRect(), k = state.scale;
+  return { x: (r.left - c.left) / k, y: (r.top - c.top) / k, w: r.width / k, h: r.height / k };
+}
+function anchor(r, side, off) {
+  off = off || 0;
+  if (side === 'l') return { x: r.x, y: r.y + r.h / 2 + off };
+  if (side === 'r') return { x: r.x + r.w, y: r.y + r.h / 2 + off };
+  if (side === 't') return { x: r.x + r.w / 2 + off, y: r.y };
+  return { x: r.x + r.w / 2 + off, y: r.y + r.h };
+}
+function route(A, B, sa, sb) {
+  const p = [A], k = sa + sb;
+  if (k === 'lt' || k === 'rt') p.push({ x: B.x, y: A.y });
+  else if (k === 'tl' || k === 'bl') p.push({ x: A.x, y: B.y });
+  else if (k === 'rl') { if (Math.abs(A.y - B.y) > 0.5) { const mx = (A.x + B.x) / 2; p.push({ x: mx, y: A.y }, { x: mx, y: B.y }); } }
+  else if (k === 'bt') { if (Math.abs(A.x - B.x) > 0.5) { const my = (A.y + B.y) / 2; p.push({ x: A.x, y: my }, { x: B.x, y: my }); } }
+  p.push(B);
+  return p;
+}
+function roundedPath(pts, r) {
+  let d = 'M' + pts[0].x + ',' + pts[0].y;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1], p1 = pts[i], p2 = pts[i + 1];
+    const d1 = Math.hypot(p1.x - p0.x, p1.y - p0.y), d2 = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    const rr = Math.min(r, d1 / 2, d2 / 2);
+    const s = { x: p1.x - (p1.x - p0.x) / d1 * rr, y: p1.y - (p1.y - p0.y) / d1 * rr };
+    const e = { x: p1.x + (p2.x - p1.x) / d2 * rr, y: p1.y + (p2.y - p1.y) / d2 * rr };
+    d += ' L' + s.x + ',' + s.y + ' Q' + p1.x + ',' + p1.y + ' ' + e.x + ',' + e.y;
+  }
+  const L = pts[pts.length - 1];
+  return d + ' L' + L.x + ',' + L.y;
+}
+function pointAt(pts, t) {
+  let total = 0; const seg = [];
+  for (let i = 1; i < pts.length; i++) { const l = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); seg.push(l); total += l; }
+  let want = total * t;
+  for (let i = 0; i < seg.length; i++) {
+    if (want <= seg[i] || i === seg.length - 1) {
+      const f = seg[i] ? Math.min(1, want / seg[i]) : 0;
+      return { x: pts[i].x + (pts[i + 1].x - pts[i].x) * f, y: pts[i].y + (pts[i + 1].y - pts[i].y) * f };
+    }
+    want -= seg[i];
+  }
+  return pts[0];
+}
+
+function drawWires() {
+  ensureDefs();
+  wires.setAttribute('width', W); wires.setAttribute('height', H); wires.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  Array.prototype.slice.call(wires.querySelectorAll('path.wire')).forEach(p => p.remove());
+  processData.connections.forEach(c => {
+    const f = registry[c.from], t = registry[c.to];
+    if (!f || !t) { console.warn('Conector com nó inexistente:', c.id); return; }
+    const A = anchor(rel(f.el), c.fs, 0), B = anchor(rel(t.el), c.ts, c.off || 0);
+    c._pts = route(A, B, c.fs, c.ts);
+    const path = sv('path', { d: roundedPath(c._pts, 9), class: 'wire' + (c.dashed ? ' dashed' : '') });
+    if (!c.noArrow) path.setAttribute('marker-end', c.dashed ? 'url(#mk-dash)' : 'url(#mk-solid)');
+    path.dataset.conn = c.id;
+    wires.appendChild(path);
+    wireEls[c.id] = { conn: c, path: path };
+  });
+  placeOverlays();
+  applyState();
+}
+
+function placeOverlays() {
+  pvEls.forEach(o => {
+    const at = o.v.at; let pos = null;
+    if (at.conn && wireEls[at.conn]) pos = pointAt(wireEls[at.conn].conn._pts, at.t);
+    else if (at.node && registry[at.node]) {
+      const r = rel(registry[at.node].el);
+      pos = at.corner === 'tl' ? { x: r.x, y: r.y } : { x: r.x + r.w, y: r.y };
+    }
+    if (pos) { o.el.style.left = (pos.x + (at.dx || 0)) + 'px'; o.el.style.top = (pos.y + (at.dy || 0)) + 'px'; }
+  });
+  labelEls.forEach(o => {
+    const w = wireEls[o.c.id]; if (!w) return;
+    const p = pointAt(w.conn._pts, o.c.label.t);
+    o.el.style.left = (p.x + (o.c.label.dx || 0)) + 'px'; o.el.style.top = (p.y + (o.c.label.dy || 0)) + 'px';
+  });
+}
+
+function relayout() { placeNodes(); drawWires(); }
+
+/* =====================================================================
+   5. ESTADO VISUAL: filtro, seleção, destaque
+   ===================================================================== */
+function neighbors(id) {
+  const preds = [], succs = [];
+  processData.connections.forEach(c => { if (c.to === id) preds.push(c.from); if (c.from === id) succs.push(c.to); });
+  return { preds: preds, succs: succs };
+}
+function labelOf(id) { return registry[id] ? registry[id].label : id; }
+
+function applyState() {
+  const f = state.filter, sel = state.selected;
+  let rel_ = null;
+  if (sel) { const nb = neighbors(sel); rel_ = new Set([sel].concat(nb.preds, nb.succs)); }
+  Object.keys(registry).forEach(k => {
+    const r = registry[k]; let dim = false;
+    if (f !== 'ALL' && r.macro !== f) dim = true;
+    if (rel_ && !r.noSel && !rel_.has(r.id)) dim = true;
+    r.el.classList.toggle('is-dim', dim);
+    r.el.classList.toggle('is-selected', r.id === sel);
+    if (r.kind === 'macro') r.el.classList.toggle('is-filter', f === r.macro);
+  });
+  Object.keys(wireEls).forEach(id => {
+    const c = wireEls[id].conn, p = wireEls[id].path;
+    const mf = registry[c.from].macro, mt = registry[c.to].macro;
+    let dim = false, active = false;
+    if (f !== 'ALL' && mf !== f && mt !== f) dim = true;
+    if (sel) { active = (c.from === sel || c.to === sel); if (!active) dim = true; }
+    p.classList.toggle('is-dim', dim); p.classList.toggle('is-active', active);
+    if (!c.noArrow) p.setAttribute('marker-end', active ? 'url(#mk-active)' : (c.dashed ? 'url(#mk-dash)' : 'url(#mk-solid)'));
+  });
+  labelEls.forEach(o => {
+    const c = o.c; let dim = false;
+    if (f !== 'ALL' && registry[c.from].macro !== f && registry[c.to].macro !== f) dim = true;
+    if (sel && c.from !== sel && c.to !== sel) dim = true;
+    o.el.classList.toggle('is-dim', dim);
+  });
+  pvEls.forEach(o => {
+    const at = o.v.at; let m = 'A', dim = false;
+    if (at.node && registry[at.node]) m = registry[at.node].macro;
+    else if (at.conn && wireEls[at.conn]) m = registry[wireEls[at.conn].conn.to].macro;
+    if (f !== 'ALL' && m !== f) dim = true;
+    if (sel) { const ok = at.node ? (rel_ && rel_.has(at.node)) : (at.conn && (wireEls[at.conn].conn.from === sel || wireEls[at.conn].conn.to === sel)); if (!ok) dim = true; }
+    o.el.classList.toggle('is-dim', dim);
+  });
+  // destaque de linhas pela fonte selecionada
+  const srcName = sel && sel.indexOf('src-') === 0 ? sel.slice(4) : null;
+  Array.prototype.forEach.call(canvas.querySelectorAll('.row'), r => {
+    r.classList.toggle('hl', !!srcName && r.dataset.src.split('|').indexOf(srcName) >= 0);
+  });
+  // chips de filtro
+  Array.prototype.forEach.call($('filters').querySelectorAll('.chip'), b => b.setAttribute('aria-pressed', b.dataset.f === f ? 'true' : 'false'));
+  updateSelInfo();
+}
+
+function updateSelInfo() {
+  const el = $('selInfo'), sel = state.selected;
+  if (!sel) { el.innerHTML = 'Clique em uma etapa, grupo ou fonte para destacar suas <b>predecessoras</b> e <b>sucessoras</b>. Esc limpa a seleção.'; return; }
+  const nb = neighbors(sel);
+  const names = (arr) => {
+    if (!arr.length) return '—';
+    if (arr.length > 3) return arr.length + ' elementos (' + arr.slice(0, 3).map(labelOf).join(', ') + '…)';
+    return arr.map(labelOf).join(', ');
+  };
+  el.innerHTML = '<b>' + labelOf(sel) + '</b> · Predecessora(s): ' + names(nb.preds) + ' · Sucessora(s): ' + names(nb.succs);
+  if (sel.indexOf('src-') === 0) {
+    el.innerHTML += ' · Linhas destacadas nas bases alimentadas por esta fonte.';
+  }
+}
+
+function select(id) { state.selected = id; applyState(); }
+function setFilter(f) { state.filter = f; applyState(); }
+
+/* =====================================================================
+   6. ZOOM
+   ===================================================================== */
+function setScale(s, manual) {
+  s = Math.max(0.3, Math.min(2, Math.round(s * 100) / 100));
+  state.scale = s; if (manual) state.autoFit = false;
+  canvas.style.transform = 'scale(' + s + ')';
+  sizer.style.width = (W * s) + 'px'; sizer.style.height = (H * s) + 'px';
+  $('zLabel').textContent = Math.round(s * 100) + '%';
+}
+function fitScale() { return viewport.clientWidth / W; }
+function fit() { state.autoFit = true; setScale(Math.max(0.25, Math.min(1.5, fitScale()))); viewport.scrollLeft = 0; }
+function initialScale() { setScale(Math.max(0.62, Math.min(1, fitScale()))); }
+
+/* =====================================================================
+   7. TOOLTIPS
+   ===================================================================== */
+function tipHtml(kind, id) {
+  if (kind === 'pv') {
+    const v = pvMap[id];
+    return '<div class="tt pv">' + v.id + ' · Ponto a validar</div><p>' + v.text + '</p><p class="sub">Relacionado a: ' + v.where + '</p>';
+  }
+  if (kind === 'act') {
+    const a = actMap[id], nb = neighbors(id), m = macroMap[a.macro];
+    return '<div class="tt">Etapa ' + a.num + ' · ' + a.name + '</div>' +
+      '<p class="sub">Macroetapa ' + m.id + ' · ' + m.name + '</p>' +
+      '<dl><dt>Ambiente</dt><dd>' + a.env + '</dd><dt>Atualização</dt><dd>' + a.update + '</dd><dt>Período por mês</dt><dd>' + a.freq + '</dd>' +
+      '<dt>Fonte</dt><dd>' + a.source + '</dd><dt>Responsável</dt><dd>' + a.owner + '</dd>' +
+      '<dt>Antecessora(s)</dt><dd>' + (nb.preds.map(labelOf).join(', ') || '—') + '</dd><dt>Sucessora(s)</dt><dd>' + (nb.succs.map(labelOf).join(', ') || '—') + '</dd></dl>' +
+      (a.note ? '<p class="sub">' + a.note + '</p>' : '') +
+      (a.manual ? '<p class="warn">Classificada como manual por ser executada pelo Analista; o arquivo não indica automação (ponto a validar).</p>' : '');
+  }
+  if (kind === 'base') {
+    const b = baseMap[id], c = processData.updateClasses[b.cls];
+    return '<div class="tt">' + b.id + ' · ' + b.name + '</div><dl><dt>Ambiente</dt><dd>Sheet</dd><dt>Fonte</dt><dd>' + srcText(b) + '</dd><dt>Atualização</dt><dd>' + c.raw + '</dd><dt>Período por mês</dt><dd>' + b.freq + '</dd><dt>Responsável</dt><dd>não identificado no arquivo</dd></dl>' + (b.note ? '<p class="sub">' + b.note + '</p>' : '');
+  }
+  if (kind === 'source') {
+    const r = registry['src-' + id];
+    return '<div class="tt">Fonte · ' + id + '</div><p>Alimenta ' + r.feeds.length + (r.feeds.length === 1 ? ' base: ' : ' bases: ') + r.feeds.map(f => f + ' ' + baseMap[f].name).join('; ') + '.</p>';
+  }
+  if (kind === 'group') {
+    const c = processData.updateClasses[id], items = processData.bases.filter(b => b.cls === id);
+    return '<div class="tt">' + c.title + ' · ' + items.length + ' bases</div><p class="sub">' + c.sub + '</p>';
+  }
+  if (kind === 'dec') {
+    return '<div class="tt">Decisão · Necessita atualização?</div><p>Condição aplicada às bases de entrada conforme a coluna “Atualização” do arquivo: Sim (regular), Quando necessário ou Não.</p>';
+  }
+  return '';
+}
+
+let tipEl = null;
+function showTip(el) {
+  tipEl = el;
+  tip.innerHTML = tipHtml(el.dataset.tipKind, el.dataset.tipId);
+  tip.hidden = false;
+  const r = el.getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+  let left = r.left + r.width / 2 - tw / 2, top = r.bottom + 8;
+  if (top + th > window.innerHeight - 8) top = Math.max(8, r.top - th - 8);
+  left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+  tip.style.left = left + 'px'; tip.style.top = top + 'px';
+}
+function hideTip() { tip.hidden = true; tipEl = null; }
+
+/* =====================================================================
+   8. EVENTOS
+   ===================================================================== */
+function bindEvents() {
+  canvas.addEventListener('mouseover', e => {
+    const t = e.target.closest('[data-tip-kind]');
+    if (t && t !== tipEl) { state.pinned = null; showTip(t); }
+  });
+  canvas.addEventListener('mouseout', e => {
+    const t = e.target.closest('[data-tip-kind]');
+    if (t && t === tipEl && state.pinned !== t && !t.contains(e.relatedTarget)) hideTip();
+  });
+  canvas.addEventListener('focusin', e => { const t = e.target.closest('[data-tip-kind]'); if (t) showTip(t); });
+  canvas.addEventListener('focusout', e => { if (!state.pinned) hideTip(); });
+
+  canvas.addEventListener('click', e => {
+    const pv = e.target.closest('.pv, [data-pvref]');
+    if (pv) { state.pinned = pv; showTip(pv); return; }
+    const m = e.target.closest('.macro');
+    if (m) { setFilter(state.filter === m.dataset.f ? 'ALL' : m.dataset.f); return; }
+    if (e.target.closest('.info')) return;
+    const n = e.target.closest('.node[data-id]');
+    if (n) { select(state.selected === n.dataset.id ? null : n.dataset.id); return; }
+    select(null);
+  });
+  canvas.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const t = e.target;
+      if (t.matches && (t.matches('.node[data-id]') || t.matches('[data-pvref]'))) { e.preventDefault(); t.click(); }
+    }
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.pv, [data-pvref]') && state.pinned) { state.pinned = null; hideTip(); }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { state.pinned = null; hideTip(); select(null); }
+  });
+
+  $('zIn').addEventListener('click', () => setScale(state.scale + 0.1, true));
+  $('zOut').addEventListener('click', () => setScale(state.scale - 0.1, true));
+  $('zFit').addEventListener('click', fit);
+  $('zReset').addEventListener('click', () => { setScale(1, true); viewport.scrollLeft = 0; });
+
+  const toggle = (id, cls, after) => {
+    const b = $(id);
+    b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      canvas.classList.toggle(cls, id === 'tDetails' ? !on : on);
+      if (after) after();
+    });
+  };
+  toggle('tDetails', 'no-det', relayout);
+  toggle('tManual', 'hl-manual');
+  toggle('tPv', 'hl-pv');
+
+  let rt = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { if (state.autoFit) initialScale(); relayout(); }, 80);
+  });
+}
+
+/* =====================================================================
+   9. INICIALIZAÇÃO
+   ===================================================================== */
+renderKpis();
+renderFilters();
+renderStructure();
+renderSources();
+renderDecision();
+renderGroups();
+renderActivities();
+renderSummary();
+renderOverlays();
+bindEvents();
+initialScale();
+relayout();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+window.addEventListener('load', relayout);
+window.__unisoma = { processData: processData, registry: registry, state: state };
+})();
+</script>
+</body>
+</html>
